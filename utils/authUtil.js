@@ -1,5 +1,5 @@
 const jwt= require("jsonwebtoken");
-const secret= "www.AakhyyaPaglu.com";
+const secret= process.env.JWT_SECRET;
 
 function createTokenForUser(user){
   const payLoad= {

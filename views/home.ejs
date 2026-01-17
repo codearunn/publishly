@@ -2,15 +2,408 @@
 <html lang="en">
 <head>
   <%- include("./partials/head") %>
-  <title>Publishly</title>
+  <title>Publishly - Your Content Publishing Platform</title>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6F4E37 0%, #8B4513 100%);
+      --secondary-gradient: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+      --coffee-dark: #3E2723;
+      --coffee-medium: #6F4E37;
+      --coffee-light: #D2B48C;
+      --cream: #F5E6D3;
+      --latte: #FFF8DC;
+      --text-dark: #3E2723;
+      --text-light: #8B6F47;
+    }
+
+    body {
+      background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background:
+      linear-gradient(
+        rgba(62, 39, 35, 0.78),
+        rgba(62, 39, 35, 0.78)
+      ),
+      url("https://images.unsplash.com/photo-1515378791036-0648a3ef77b2");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-30px, -30px) rotate(180deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      max-width: 720px;
+      margin: 0 auto 2rem;
+      opacity: 0.95;
+    }
+
+    .hero-buttons {
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-hero {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      margin: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-primary {
+      background: #FFF8DC;
+      color: #6F4E37;
+      border: none;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4);
+      background: #FFF8DC;
+      color: #6F4E37;
+    }
+
+    .btn-hero-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .btn-hero-outline:hover {
+      background: #FFF8DC;
+      color: #6F4E37;
+      transform: translateY(-3px);
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 80px 0;
+      background: #FFF8DC;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .feature-card {
+      background: #FFF8DC;
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 2px solid #D2B48C;
+      height: 100%;
+      box-shadow: 0 4px 6px rgba(111, 78, 55, 0.1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(111, 78, 55, 0.25);
+      border-color: #6F4E37;
+      background: #F5E6D3;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: #6F4E37;
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .feature-description {
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Latest Blogs Section */
+    .blogs-section {
+      padding: 80px 0;
+      background: #F5E6D3;
+    }
+
+    .blog-card-home {
+      background: #FFF8DC;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 2px solid #D2B48C;
+      height: 100%;
+      box-shadow: 0 4px 6px rgba(111, 78, 55, 0.1);
+    }
+
+    .blog-card-home:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(111, 78, 55, 0.25);
+      border-color: #6F4E37;
+    }
+
+    .blog-card-home img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .blog-card-home:hover img {
+      transform: scale(1.05);
+    }
+
+    .blog-card-body {
+      padding: 1.5rem;
+    }
+
+    .blog-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .blog-card-meta {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-read-more {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-read-more:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4);
+      color: white;
+    }
+
+    .view-all-btn {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .btn-view-all {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-view-all:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(111, 78, 55, 0.6);
+      color: white;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+  </style>
 </head>
 <body>
   <%- include("./partials/nav") %>
 
-  <div class="container mt-5">
-    <h1>Welcome to Publishly</h1>
-    <p>Your content publishing platform</p>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content text-center">
+        <h1 class="hero-title">Welcome to Publishly</h1>
+        <p class="hero-subtitle">Share your thoughts, stories, and ideas with the world</p>
+        <div class="hero-buttons">
+          <% if (locals.user) { %>
+            <a href="/blog/createBlog" class="btn btn-hero btn-hero-primary">Start Writing</a>
+            <a href="/blog" class="btn btn-hero btn-hero-outline">Explore Blogs</a>
+          <% } else { %>
+            <a href="/signUp" class="btn btn-hero btn-hero-primary">Get Started</a>
+            <a href="/signin" class="btn btn-hero btn-hero-outline">Sign In</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Why Choose Publishly?</h2>
+      <p class="section-subtitle">Everything you need to create and share amazing content</p>
+      <div class="row g-4">
+
+  <div class="col-md-4">
+    <div class="feature-card">
+      <div class="feature-icon">✍️</div>
+      <h3 class="feature-title">Effortless Writing</h3>
+      <p class="feature-description">
+        Write and publish with clarity using a distraction-free editor
+        designed to keep your focus where it matters — on your ideas.
+      </p>
+    </div>
   </div>
+
+  <div class="col-md-4">
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3 class="feature-title">Thoughtful Design</h3>
+      <p class="feature-description">
+        Present your stories with clean layouts and elegant visuals that
+        enhance readability without overwhelming the reader.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3 class="feature-title">Reliable Performance</h3>
+      <p class="feature-description">
+        Enjoy fast load times and dependable infrastructure so your
+        content is always available when readers come looking.
+      </p>
+    </div>
+  </div>
+
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Blogs Section -->
+  <section class="blogs-section">
+    <div class="container">
+      <h2 class="section-title">Latest Stories</h2>
+      <p class="section-subtitle">Discover what our community is writing about</p>
+
+      <% if (blogs && blogs.length > 0) { %>
+        <div class="row g-4">
+          <% blogs.forEach(blog => { %>
+            <div class="col-md-4">
+              <div class="blog-card-home">
+                <img src="/uploads/<%= blog.coverImgURL %>" alt="<%= blog.title %>" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\'%3E%3Crect fill=\'%23f0f0f0\' width=\'400\' height=\'200\'/%3E%3Ctext fill=\'%23999\' font-family=\'sans-serif\' font-size=\'20\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E'">
+                <div class="blog-card-body">
+                  <h5 class="blog-card-title"><%= blog.title %></h5>
+                  <p class="blog-card-meta">
+                    <% if (blog.createdBy && blog.createdBy.fullName) { %>
+                      By <%= blog.createdBy.fullName %>
+                    <% } %>
+                    <% if (blog.createdAt) { %>
+                      • <%= new Date(blog.createdAt).toLocaleDateString() %>
+                    <% } %>
+                  </p>
+                  <a href="/blog/<%= blog._id %>" class="btn-read-more">Read More →</a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <div class="view-all-btn">
+          <a href="/blog" class="btn-view-all">View All Blogs</a>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-state-icon">📝</div>
+          <h3>No blogs yet</h3>
+          <p>Be the first to share your story!</p>
+          <% if (locals.user) { %>
+            <a href="/blog/createBlog" class="btn-view-all mt-3">Create Your First Blog</a>
+          <% } else { %>
+            <a href="/signUp" class="btn-view-all mt-3">Get Started</a>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </section>
 
   <%- include("./partials/scripts") %>
 </body>

@@ -1,23 +1,26 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary " data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark fixed-top shadow-sm" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Publishly</a>
+    <a class="navbar-brand" href="/">Publishly</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <% if (locals.user) { %>
          <li class="nav-item">
-          <a class="nav-link" href="#">Add Blog</a>
+          <a class="nav-link" href="/blog/createBlog">Add Blog</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <%= locals.user.name %>
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <% const avatar = locals.user.profileImg || locals.user.profileImgURL; %>
+            <img src="<%= avatar || '/images/LuffyPFP.jpeg' %>" alt="avatar" class="rounded-circle" style="width:32px;height:32px;object-fit:cover;">
+            <span><%= locals.user.name %></span>
           </a>
           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/user/profile">Upload profile photo</a></li>
             <li><a class="dropdown-item" href="/logout">Logout</a></li>
           </ul>
         </li>
@@ -33,6 +36,9 @@
     </div>
   </div>
 </nav>
+
+<!-- Spacer to offset fixed navbar height -->
+<div style="height: 72px;"></div>
 
 <% if (locals.error) { %>
   <div class="container-fluid mt-4">

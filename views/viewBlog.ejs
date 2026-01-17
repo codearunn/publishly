@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="coffee">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f6efe7;
+      --card: rgba(255, 248, 240, 0.8);
+      --text: #2d241c;
+      --accent: #8b5a2b;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0c0a;
+      --card: rgba(30, 24, 20, 0.7);
+      --text: #f1e6dc;
+      --accent: #c08a58;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    /* Progress bar */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 9999;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      height: 420px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    }
+
+    .hero-content {
+      position: absolute;
+      bottom: 30px;
+      left: 40px;
+      color: white;
+      z-index: 1;
+      width: 1000px;
+    }
+
+    /* Glass */
+    .glass {
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      width: 1300px;
+    }
+
+    /* Content */
+    .content p {
+      font-size: 1.1rem;
+      line-height: 1.9;
+    }
+
+    blockquote {
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
+      font-style: italic;
+      margin: 2rem 0;
+    }
+
+    /* Scroll animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.7s ease;
+    }
+
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Clap button */
+    .clap {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .clap span {
+      position: absolute;
+      top: -18px;
+      font-size: 14px;
+    }
+
+    /* Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 22px;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 8px 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    /* Comment section */
+    .comment-card {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    [data-theme="dark"] .comment-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    [data-theme="dark"] .form-control,
+    [data-theme="dark"] textarea {
+      background: #161616;
+      color: var(--text);
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .form-control::placeholder,
+    [data-theme="dark"] textarea::placeholder {
+      color: #8d8d8d;
+    }
+
+    [data-theme="dark"] .form-text,
+    [data-theme="dark"] .text-muted {
+      color: #b8b8b8 !important;
+    }
+    [data-theme="dark"] .text-secondary,
+    [data-theme="dark"] .link-secondary {
+      color: #d0d0d0 !important;
+    }
+
+    [data-theme="dark"] .badge.bg-light {
+      background: #1e1e1e !important;
+      color: #dcdcdc !important;
+      border-color: #333 !important;
+    }
+
+    [data-theme="dark"] .btn-outline-secondary {
+      color: #e5e5e5;
+      border-color: #555;
+    }
+
+    [data-theme="dark"] .btn-outline-secondary:hover {
+      background: #222;
+      border-color: #777;
+    }
+
+    .comment-actions .btn {
+      min-width: 110px;
+    }
+
+    /* Larger, writing-app style textarea */
+    #comment {
+      min-height: 220px;
+      font-size: 1rem;
+      line-height: 1.6;
+      padding: 1rem;
+    }
+
+    #comment:focus {
+      box-shadow: 0 0 0 0.15rem rgba(139, 90, 43, 0.25);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="progress"></div>
+
+<!-- Theme toggle -->
+<div class="theme-toggle" onclick="toggleTheme()">☕️</div>
+
+<!-- Navbar -->
+  <%- include("./partials/nav") %>
+
+<div class="container my-5">
+
+  <!-- HERO -->
+  <div class="hero mb-5 fade-up">
+    <img src="/uploads/<%= blog.coverImgURL%>" />
+    <div class="hero-content">
+      <h1 class="fw-bold"><%= blog.title %></h1>
+      <p>
+        By <%= blog.createdBy && blog.createdBy.fullName ? blog.createdBy.fullName : "Anonymous" %>
+        · <%= typeof readTimeMinutes !== "undefined" ? readTimeMinutes : 1 %> min read
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="row mt-5">
+    <div class="col-lg-8 fade-up">
+      <div class="glass content" id="blog"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <h3>comments:</h3>
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start mb-4">
+            <div class="avatar bg-primary-subtle text-primary fw-semibold me-3 rounded-circle d-inline-flex justify-content-center align-items-center" style="width:46px;height:46px;">
+              <span>📝</span>
+            </div>
+
+            <% if (locals.user) { %>
+            <div>
+              <h4 class="mb-1">Leave a Comment</h4>
+              <p class="text-muted mb-0">Join the discussion. Keep it constructive and on-topic.</p>
+            </div>
+          </div>
+
+          <form action="/blog/comment/<%= blog._id %>" method="POST">
+            <div class="mb-3">
+              <label for="comment" class="form-label fw-semibold">Your comment</label>
+              <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="Share your perspective..." required></textarea>
+              <div class="form-text">Markdown supported. Max 500 characters.</div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+              <div class="ms-sm-auto d-flex gap-2">
+                <button type="reset" class="btn btn-outline-secondary">Clear</button>
+                <button type="submit" class="btn btn-primary px-4">Post comment</button>
+              </div>
+            </div>
+          </form>
+
+          <hr class="my-4">
+          <% } %>
+
+          <% function timeAgo(date) {
+            const diffMs = Date.now() - new Date(date).getTime();
+            const minutes = Math.floor(diffMs / 60000);
+            if (minutes < 1) return "just now";
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            if (days < 7) return `${days}d ago`;
+            const weeks = Math.floor(days / 7);
+            if (weeks < 4) return `${weeks}w ago`;
+            const months = Math.floor(days / 30);
+            if (months < 12) return `${months}mo ago`;
+            const years = Math.floor(days / 365);
+            return `${years}y ago`;
+          } %>
+
+          <div class="d-flex flex-column gap-3">
+          <% comments.forEach(comment => { %>
+            <div class="d-flex align-items-start">
+              <% const avatar = comment?.createdBy?.profileImg || comment?.createdBy?.profileImgURL; %>
+              <img class="rounded-circle me-3" style="width:46px;height:46px;object-fit:cover;" src="<%= avatar || '/images/LuffyPFP.jpeg' %>" alt="avatar"/>
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <strong><%= comment?.createdBy?.fullName || 'Anonymous' %></strong>
+                  <small class="text-muted"><%= timeAgo(comment?.createdAt) %></small>
+                </div>
+                <p class="mb-1 text-secondary"><%= comment?.content || 'No comment content provided.' %></p>
+                <div class="d-flex gap-3 small">
+
+                </div>
+              </div>
+            </div>
+          <% }) %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Render blog body as Markdown into the content container
+  const markdown = `<%- JSON.stringify(blog.body || "") %>`;
+  document.getElementById("blog").innerHTML = marked.parse(markdown);
+
+  // Progress bar on scroll
+  window.addEventListener("scroll", () => {
+    const scrolled = window.scrollY;
+    const height = document.body.scrollHeight - window.innerHeight;
+    document.getElementById("progress").style.width =
+      (scrolled / height) * 100 + "%";
+  });
+
+  // Fade-up scroll animation
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add("show");
+    });
+  });
+
+  document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
+
+  // Theme toggle (light/dark) with persistence
+  const themeToggleEl = document.querySelector(".theme-toggle");
+
+  function setTheme(theme) {
+    const html = document.documentElement;
+    html.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+    if (themeToggleEl) {
+      themeToggleEl.textContent = theme === "dark" ? "🌑" : "☕️";
+    }
+  }
+
+  function toggleTheme() {
+    const next = document.documentElement.dataset.theme === "dark" ? "coffee" : "dark";
+    setTheme(next);
+  }
+
+  // Initialize theme from saved preference (coffee as default)
+  const savedTheme = localStorage.getItem("theme");
+  setTheme(savedTheme || document.documentElement.dataset.theme || "coffee");
+
+  // Simple in-page clap counter
+  let claps = 0;
+  function clap() {
+    claps++;
+    document.getElementById("count").innerText = claps;
+  }
+</script>
+
+<!-- Bootstrap JS (for navbar dropdowns, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

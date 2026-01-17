@@ -2,30 +2,312 @@
 <html lang="en">
 <head>
   <%- include("./partials/head") %>
-  <title>Publishly</title>
-</head>
-<body data-bs-theme="dark">
-  <%- include("./partials/nav") %>
+  <title>Create Account - Publishly</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-  <div class="container mt-5">
-    <form method="post" action="/user/signup">
-      <div class="mb-3" >
-        <label for="exampleInputEmail1" class="form-label">Name</label>
-        <input type="text" class="form-control" id="fullName" aria-describedby="fullName" name="fullName">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+    .auth-container {
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .auth-card {
+      background: #FFF8DC;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 24px rgba(111, 78, 55, 0.15);
+      border: 2px solid #D2B48C;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .auth-header h1 {
+      color: #6F4E37;
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+      color: #8B6F47;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .auth-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      color: #6F4E37;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-control {
+      background: #FFF8DC;
+      border: 2px solid #D2B48C;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      color: #3E2723;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .form-control:focus {
+      background: #FFF8DC;
+      border-color: #6F4E37;
+      box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.25);
+      color: #3E2723;
+      outline: none;
+    }
+
+    .form-control::placeholder {
+      color: #A0826D;
+      opacity: 0.7;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #8B6F47;
+    }
+
+    .password-strength.weak {
+      color: #d32f2f;
+    }
+
+    .password-strength.medium {
+      color: #f57c00;
+    }
+
+    .password-strength.strong {
+      color: #388e3c;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #6F4E37 0%, #8B4513 100%);
+      color: #FFF8DC;
+      border: none;
+      padding: 14px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(111, 78, 55, 0.3);
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4);
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+      color: #FFF8DC;
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #D2B48C;
+    }
+
+    .auth-footer p {
+      color: #8B6F47;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .auth-footer a {
+      color: #6F4E37;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .auth-footer a:hover {
+      color: #8B4513;
+      text-decoration: underline;
+    }
+
+    .form-icon {
+      font-size: 1.1rem;
+      margin-right: 6px;
+    }
+
+    .help-text {
+      color: #8B6F47;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 576px) {
+      .auth-card {
+        padding: 1.5rem;
+      }
+
+      .auth-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-icon">☕</div>
+        <h1>Create Account</h1>
+        <p>Join Publishly and start sharing your stories</p>
       </div>
-      <div class="mb-3" >
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" aria-describedby="email" name="email">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+
+      <form method="post" action="/user/signup" id="signupForm">
+        <div class="form-group">
+          <label for="fullName" class="form-label">
+            <span class="form-icon">👤</span>Full Name
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="fullName"
+            name="fullName"
+            placeholder="Enter your full name"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <span class="form-icon">📧</span>Email Address
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="your.email@example.com"
+            required
+            autocomplete="email"
+          >
+          <div class="help-text">We'll never share your email with anyone</div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <span class="form-icon">🔒</span>Password
+          </label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Create a strong password"
+            required
+            autocomplete="new-password"
+            minlength="6"
+          >
+          <div class="password-strength" id="passwordStrength"></div>
+          <div class="help-text">Minimum 6 characters required</div>
+        </div>
+
+        <button type="submit" class="btn btn-submit">
+          ☕ Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="/signin">Sign In</a></p>
       </div>
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password">
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
   </div>
+
+  <script>
+    // Password strength indicator
+    const passwordInput = document.getElementById('password');
+    const passwordStrength = document.getElementById('passwordStrength');
+
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = '';
+      let strengthClass = '';
+
+      if (password.length === 0) {
+        strength = '';
+      } else if (password.length < 6) {
+        strength = 'Too short (minimum 6 characters)';
+        strengthClass = 'weak';
+      } else if (password.length < 8) {
+        strength = 'Weak';
+        strengthClass = 'weak';
+      } else if (password.length < 12) {
+        strength = 'Medium';
+        strengthClass = 'medium';
+      } else {
+        strength = 'Strong';
+        strengthClass = 'strong';
+      }
+
+      passwordStrength.textContent = strength;
+      passwordStrength.className = 'password-strength ' + strengthClass;
+    });
+
+    // Form validation with preventDefault
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!fullName) {
+        e.preventDefault();
+        alert('Please enter your full name');
+        document.getElementById('fullName').focus();
+        return false;
+      }
+
+      if (!email) {
+        e.preventDefault();
+        alert('Please enter your email');
+        document.getElementById('email').focus();
+        return false;
+      }
+
+      if (!password || password.length < 6) {
+        e.preventDefault();
+        alert('Please enter a password (at least 6 characters)');
+        document.getElementById('password').focus();
+        return false;
+      }
+
+      // If all validation passes, form will submit normally
+    });
+  </script>
 
   <%- include("./partials/scripts") %>
 </body>

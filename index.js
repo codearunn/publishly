@@ -1,11 +1,13 @@
+require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const app= express();
-const PORT= 3000;
+const PORT= process.env.PORT || 8001;
 
 //DB connection
 const {connectToMongoDB}= require("./connect.js");
-connectToMongoDB("mongodb://localhost:27017/Publishly")
+const mongoURI= process.env.MONGO_URI;
+connectToMongoDB(mongoURI)
           .then(() => console.log("DB connected"))
           .catch((e) => console.log(e));
 
@@ -21,13 +23,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(checkAuthByCookie("token"));
+app.use(express.static(path.resolve("./public")));
+
 //ROUTES
 const staticRoute = require("./routes/staticRoutes");
 const userRoute= require("./routes/user");
+const blogRoute= require("./routes/blog");
+
+
 
 app.use("/", staticRoute);
 app.use("/user", userRoute);
-
+app.use("/blog", blogRoute);
 
 
 
